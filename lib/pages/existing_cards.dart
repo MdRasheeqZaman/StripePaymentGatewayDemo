@@ -14,10 +14,7 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
       appBar: AppBar(
         title: Text('Choose a card'),
       ),
-      body: Container(
-        padding: EdgeInsets.all(10.0),
-        child: Text('Existing Card'),
-      ),
+      body: Text('Existing Card Page'),
     );
   }
 }

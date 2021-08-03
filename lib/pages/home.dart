@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stripe_payment_gateway_demo/services/payment_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -39,6 +40,18 @@ class HomePageState extends State<HomePage> {
   }
 
   onItemPress(BuildContext context, int index) {
-    print('Index: ${index.toString()}');
+    switch(index){
+      case 0:
+        StripeTransactionResponse response = StripeService.payWithNewCard(amount: '15000', currency: 'USD');
+        if(response.success){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(response.message), duration: Duration(milliseconds: 2000),)
+          );
+        }
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/existing-cards');
+        break;
+    }
   }
 }
