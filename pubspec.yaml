@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_stripe: ^1.2.0
   http: ^0.13.3
+  rounded_loading_button: ^2.0.5
 
 dev_dependencies:
   flutter_test:

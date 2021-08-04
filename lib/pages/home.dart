@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:stripe_payment_gateway_demo/services/payment_service.dart';
+import 'package:flutter/services.dart';
+import 'package:stripe_payment_gateway_demo/pages/new_card.dart';
 
 class HomePage extends StatefulWidget {
+  static const routeName = '/home';
+
   const HomePage({Key? key}) : super(key: key);
 
   @override
@@ -10,50 +12,49 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  final payController = TextEditingController();
+
+  @override
+  void dispose() {
+    payController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
       ),
       body: Column(
         children: [
-          CardField(
-            onCardChanged: (card) {
-              print('C1: $card');
-            },
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: TextField(
+              controller: payController,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter Amount',
+                    prefixIcon: Icon(Icons.money)
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ]
+            ),
           ),
-          TextButton(
-            onPressed: (){ onPayPress(context);},
-            child: Text('pay'),
-          )
-          /*ListView.separated(
-              itemBuilder: (context, index){
-                Icon icon = Icon((index == 0) ? Icons.add_rounded : Icons.credit_card, color: themeData.primaryColor,);
-                Text text = Text((index == 0) ? 'Pay via New Card' : 'Pay via Existing Card');
-                return InkWell(
-                  onTap: () => onItemPress(context, index),
-                  child: ListTile(
-                    title: text,
-                    leading: icon,
-                  ),
-                );
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: ElevatedButton(
+              onPressed: (){
+                int payment = int.parse(payController.text);
+                Navigator.pushNamed(context, NewCard.routeName, arguments: (payment*100).toString());
               },
-              separatorBuilder: (context, index) => Divider(
-                color: themeData.primaryColor,
-              ),
-              itemCount: 2
-          )*/
+              child: Text('Pay'),
+            ),
+          )
         ],
       ),
-    );
-  }
-
-  onPayPress(BuildContext context) async {
-    StripeTransactionResponse response = await StripeService.payWithNewCard(amount: '15000', currency: 'USD');
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(response.message), duration: Duration(milliseconds: 3000),)
     );
   }
 }
